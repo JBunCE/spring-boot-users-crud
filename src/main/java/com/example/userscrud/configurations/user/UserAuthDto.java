@@ -3,7 +3,7 @@ package com.example.userscrud.configurations.user;
 import lombok.Data;
 
 @Data
-public class ApplicationUserAuthDto {
+public class UserAuthDto {
     private String email;
     private String password;
 }

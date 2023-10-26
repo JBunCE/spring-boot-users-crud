@@ -2,8 +2,8 @@ package com.example.userscrud.configurations.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.userscrud.configurations.jwt.JwtConfig;
-import com.example.userscrud.configurations.user.ApplicationUserAuthDto;
-import com.example.userscrud.configurations.user.ApplicationUserDetailsImpl;
+import com.example.userscrud.configurations.user.UserAuthDto;
+import com.example.userscrud.configurations.user.UserDetailsImpl;
 import com.example.userscrud.web.dtos.BaseResponse;
 import com.example.userscrud.web.dtos.response.JwtResponse;
 import io.jsonwebtoken.Jwts;
@@ -12,8 +12,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +22,6 @@ import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Collections;
 
 @AllArgsConstructor
 public class ApplicationAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -37,10 +34,10 @@ public class ApplicationAuthenticationFilter extends UsernamePasswordAuthenticat
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
 
-        ApplicationUserAuthDto authDto;
+        UserAuthDto authDto;
 
         try {
-            authDto = new ObjectMapper().readValue(request.getReader(), ApplicationUserAuthDto.class);
+            authDto = new ObjectMapper().readValue(request.getReader(), UserAuthDto.class);
         } catch (Exception exception) {
             throw new RuntimeException(exception.getLocalizedMessage());
         }
@@ -59,7 +56,7 @@ public class ApplicationAuthenticationFilter extends UsernamePasswordAuthenticat
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
-        ApplicationUserDetailsImpl applicationUserDetails = (ApplicationUserDetailsImpl) authResult.getPrincipal();
+        UserDetailsImpl applicationUserDetails = (UserDetailsImpl) authResult.getPrincipal();
 
         Date expirationDate = Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpiration()));
         String token = Jwts.builder()

@@ -1,6 +1,7 @@
 package com.example.userscrud.configurations.jwt;
 
-import com.example.userscrud.configurations.user.ApplicationUserDetailsServiceImpl;
+import com.example.userscrud.configurations.user.UserDetailsImpl;
+import com.example.userscrud.configurations.user.UserDetailsServiceImpl;
 import com.example.userscrud.web.dtos.BaseResponse;
 import com.example.userscrud.web.dtos.response.JwtResponse;
 import io.jsonwebtoken.Claims;
@@ -23,7 +24,7 @@ public class JwtService {
     private SecretKey secretKey;
 
     @Autowired
-    private ApplicationUserDetailsServiceImpl applicationUserDetailsService;
+    private UserDetailsServiceImpl UserDetailsService;
 
     public BaseResponse refresh(String refreshToken) {
         Claims claims = Jwts.parserBuilder()
@@ -32,18 +33,19 @@ public class JwtService {
                 .parseClaimsJws(refreshToken)
                 .getBody();
         String email = claims.getSubject();
-        applicationUserDetailsService.loadUserByUsername(email);
+        UserDetailsImpl userDetails = (UserDetailsImpl) UserDetailsService.loadUserByUsername(email);
 
         Date expirationDate = Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpiration()));
         String token = Jwts.builder()
-                .setSubject(email)
+                .setSubject(userDetails.getUsername())
+                .claim("authorities", userDetails.getAuthorities())
                 .setIssuedAt(new java.util.Date())
                 .setExpiration(expirationDate)
                 .signWith(secretKey).compact();
 
         Date refreshExpirationDate = Date.valueOf(LocalDate.now().plusDays(jwtConfig.getRefreshTokenExpiration()));
         String newRefreshToken = Jwts.builder()
-                .setSubject(email)
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new java.util.Date())
                 .setExpiration(refreshExpirationDate)
                 .signWith(secretKey).compact();

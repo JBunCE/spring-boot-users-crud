@@ -1,6 +1,6 @@
 package com.example.userscrud.configurations;
 
-import com.example.userscrud.configurations.user.ApplicationUserDetailsServiceImpl;
+import com.example.userscrud.configurations.user.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ public class AuthenticationManagerConfig {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private ApplicationUserDetailsServiceImpl applicationUserDetails;
+    private UserDetailsServiceImpl applicationUserDetails;
 
     @Bean
     public AuthenticationManager authenticationManager() {
