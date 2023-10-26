@@ -1,2 +1,3 @@
 # spring-boot-users-crud
-CRUD with a full implementation of spring security authentication with JWT
+
+This template contains a full implementation of spring security and a simple users crud too
