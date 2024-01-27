@@ -4,14 +4,13 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - mvn clean install
+      - mvn clean install -Dspring.profiles.active=prod
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - REPOSITORY_URI=905418425561.dkr.ecr.us-east-2.amazonaws.com/users-crud
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
-      - mvn package -Dspring.profiles.active=prod
   build:
     commands:
       - echo Build started on `date`
