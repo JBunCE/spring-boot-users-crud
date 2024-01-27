@@ -54,6 +54,7 @@ public class ApplicationSecurityConfig {
         http.addFilter(authenticationFilter)
                 .addFilterBefore(authorizationFilter, ApplicationAuthenticationFilter.class);
         http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers("/default/health").permitAll();
             auth.requestMatchers("/token/refresh").permitAll();
             auth.requestMatchers("/users/create").permitAll();
             auth.requestMatchers("/users/**").hasRole("ADMIN");
