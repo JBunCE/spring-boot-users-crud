@@ -58,6 +58,7 @@ public class ApplicationSecurityConfig {
             auth.requestMatchers("/users/create").permitAll();
             auth.requestMatchers("/users/**").hasRole("ADMIN");
         });
+
         return http.httpBasic(Customizer.withDefaults()).build();
     }
 }
